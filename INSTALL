@@ -1,0 +1,20 @@
+/* xtable.c      (c) 2012-2013 Dirk Laurie and John Hind 
+      Enhanced version of the Lua table library
+   Same license as Lua 5.2.2 (c) 1994-2012 Lua.org, PUC-Rio
+      from which much of the code has been borrowed anyway.
+*/
+
+/* on Linux compile  with `cc -shared xtable.c -o xtable.so` */
+
+/* on Windows, define the symbols 'LUA_BUILD_AS_DLL' and 'LUA_LIB' and
+ * compile and link with stub library lua52.lib (for lua52.dll)
+ * generating xtable.dll. If necessary, generate lua52.lib and lua52.dll by 
+ * compiling Lua sources with 'LUA_BUILD_AS_DLL' defined.
+*/
+
+/* To test, run `lua test-xtable.lua`. The results should be the same as
+ * in the file `test-xtable.out`.
+ * Full documentation in xtable-manual.html */   
+
+Version 5.2.2-rc3
+Tue Mar 26 23:45:28 SAST 2013

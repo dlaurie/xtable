@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+<head>
+<title>Enhanced table library for Lua 5.2</title>
+<link rel="stylesheet" type="text/css" href="xtable.css">
+<META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
+</head>
+
+<body>
+
+<hr>
+<h1>
+<a href="http://www.lua.org/"><img src="logo.gif" alt="" border="0"></a>
+Enhanced table library for Lua 5.2
+</h1>
+by John Hind and Dirk Laurie
+<p>
+<small>
+Copyright &copy; 2013.
+Freely available under the terms of the
+<a href="http://www.lua.org/license.html">Lua license</a>.
+</small>
+<hr>
+<p>
+
+This library provides generic functions for table manipulation. All its
+functions are delivered in a table returned by `require'xtable'`, here
+assumed to be assigned to `xtable`, and its subtables `xtable.block`
+and `xtable.tuple`.
+
+The project started as a drop-in replacement for the standard table 
+library, incorporating a selection of extra features (e.g. multiple 
+insert/remove; negative indices; list integrity maintenance). The
+authors gradually realized that no two Lua users can be made to agree
+on just which extra features are desirable, and moved to a model of C
+core functions with a Lua top layer.
+
+These core C routines perform tasks that can take advantage of the 
+stack and of fast C loops. They do not supply default table limits 
+(neither 1 nor `#tbl`).
+
+Besides the core functions, the sublibraries contain some sample 
+applications written in Lua not documented here, but briefly described
+by comments in the Lua source code.  If your system has 
+[Lua interactive help](https://github.com/dlaurie/lua-ihelp) installed,
+these comments are available via `xtable.help()`; otherwise consult 
+the separate document [`sample.html`](sample.html) made by
+[LDoc](http://stevedonovan.github.com/ldoc).
+
+## The xtable library
+
+The main library is initialized to the six functions of the standard
+table library when the core C package is loaded.  The routine
+described below is defined in `xtable.lua`.
+
+* * * * *
+
+### `xtable.sort(tbl,cmp[,first,last])`
+
+See the Lua Reference Manual for `cmp`. This routine replaces `table.sort`, 
+from which it differs in two ways: explicit limits can be specified, and
+it uses a slightly different algorithm which is somewhat slower on the 
+average, but much faster when the table contains many elements that test 
+equal.
+
+## The block sublibrary
+
+This sublibrary provides basic functions for manipulating blocks 
+of continuous elements in a table. 
+
+These functions all have a table and two integers as their first three
+arguments. The notation `tbl[a:b]` is used for a block of values with 
+increasing keys if `a<b` and decreasing keys if `a>b`.
+Thus `tbl[b:a]` is the reverse of `tbl[a:b]`. 
+
+Not documented here are some functions having the same names as 
+functions in the standard table library, written in Lua. They
+are lightly documented in the Lua source code.
+
+* * * * *
+
+### `xtable.block.get(tbl,a,b)`
+
+Returns `tbl[a:b]`. This function may cause stack overflow
+if too many items are requested.
+
+* * * * *
+
+### `xtable.block.set(tbl,a,b,...)`
+
+Sets  `tbl[a:b]` to the given values, overwriting existing values.
+
+If the vararg list is empty (not even containing `nil`), stores 
+nothing. The list is treated cyclically: if it is exhausted before 
+`b` is reached, the supply of values is resumed from its beginning. 
+If `b` is nil, values are stored in `tbl[a],tbl[a+1],...`
+until the list is exhausted. 
+
+* * * * *
+
+### `xtable.block.move(tbl,a1,b1,a2[,b2])`
+
+Moves `tbl[a1:b1]` to `tbl[a2:b2]`, overwriting existing values but 
+not erasing anything.  If the last parameter is omitted or nil, `b2` 
+is calculated to satisfy `b2-b1==a2-a1`.
+
+* * * * *
+
+### `xtable.block.trisect(tbl,a,b[,cmp[,x[,tag]]])`
+
+Given `a<b`, partially sorts `tbl[a:b]` into three parts, returning 
+indices `j` and `k` such that `tbl[a:j]` contains all the elements 
+that precede `x` and `tbl[k:b]` contains all the elements preceded 
+by `x`. Nil return values denote empty intervals.  When `x` is not 
+supplied, an element of the block is selected at random. 
+
+By default `cmp(x,y)` means `x<y`, respecting metamethods. When `cmp`
+is supplied, `cmp(x,y)` is `true` if `x` must precede `y` in the sorted 
+block. 
+ 
+When `tag` is supplied, it must be another table. The elements
+corresponding to the keys `a` to `b` will be permuted in exactly 
+the same way that the `tbl` array is.
+
+`trisect` is just a couple of recursive calls short of a full sort
+routine, but is made available separately so that it can also be used
+to implement stable sorting and to return the sorting permutation. See
+the code of `xtable.sort` and `xtable.block.sort`.
+
+## The tuple sublibrary
+
+This library provides basic functions for manipulating tuples,
+i.e. immutable lists of values on the runtime stack. The functions 
+are supplied in the table `xtable.tuple`.
+
+Since no table accesses are involved, and the return values are in
+the same stack as the vararg list, often in the same positions,
+tuple functions are fast.
+
+Tuples in Lua live an ephemeral life as vararg lists or multiple 
+return values, and need to be passed to coroutines or packed into 
+tables to achieve permanence. The functions `cache` and `iter`,
+written in Lua, serve as sample applications.
+
+* * * * *
+
+### `xtable.tuple.cache(...)`
+
+Returns a function that, when called, will return the given values.
+
+* * * * *
+
+### `xtable.tuple.iter(...)`
+
+Returns an iterator function that, in a generic `for` loop, will
+return the given values one by one.
+
+* * * * *
+
+### `xtable.tuple.keep(count,...)`
+
+Returns `count` arguments, starting at the first extra argument.
+As in the case of `select`, a negative number indexes from the end 
+(-1 is the last argument). 
+
+* * * * *
+
+### `xtable.tuple.map(ft,...)`
+
+Each return value is the result of `ft` applied to the corresponding
+value in the tuple. 
+
+"Applying" means indexing if `ft` is a table and calling if `ft` is 
+a function, which is assumed to be unary with one return value. 
+
+* * * * *
+
+### `xtable.tuple.collect(...)`
+
+Concatenates all its arguments, respecting metamethods.
+
+<HR>
+<SMALL CLASS="footer">
+Last update:
+xtable-5.2.2-rc3
+Tue Mar 26 23:46:33 SAST 2013
+</SMALL>
+<!--
+Dirk
+-->

@@ -1,0 +1,37 @@
+$ lua xtable-benchmark.lua 1000000
+== test on 1000000 duples with 20 distinct values
+table.sort: 6.22 seconds but is unstable :-(
+block.sort: 6.48 seconds and seems stable :-))
+xtable.sort: 1.96 seconds but is unstable :-(
+== test on 1000000 duples with approximately 20 equals of every value
+table.sort: 7.68 seconds but is unstable :-(
+block.sort: 4.52 seconds and seems stable :-))
+xtable.sort: 0.68 seconds and seems stable :-))
+== test on 1000000 random elements
+table.sort: 1.86 seconds
+block.sort: 4.73 seconds
+xtable.sort: 2.76 seconds
+== test on 1000000 sorted elements with 1000 random swaps
+table.sort: 1.43 seconds
+block.sort: 3.77 seconds
+xtable.sort: 2.63 seconds
+
+$ lua xtable-benchmark.lua 10000000
+== test on 10000000 duples with 20 distinct values
+table.sort: 73.62 seconds but is unstable :-(
+block.sort: 74.93 seconds and seems stable :-))
+xtable.sort: 20.50 seconds but is unstable :-(
+== test on 10000000 duples with approximately 20 equals of every value
+table.sort: 92.55 seconds but is unstable :-(
+block.sort: 55.43 seconds and seems stable :-))
+xtable.sort: 6.79 seconds and seems stable :-))
+== test on 10000000 random elements
+table.sort: 22.07 seconds
+block.sort: 56.22 seconds
+xtable.sort: 36.03 seconds
+== test on 10000000 sorted elements with 3163 random swaps
+table.sort: 17.36 seconds
+block.sort: 49.91 seconds
+xtable.sort: 33.22 seconds
+
+
