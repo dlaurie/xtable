@@ -112,7 +112,7 @@ is calculated to satisfy `b2-b1==a2-a1`.
 Given `a<b`, partially sorts `tbl[a:b]` into three parts, returning 
 indices `j` and `k` such that `tbl[a:j]` contains all the elements 
 that precede `x` and `tbl[k:b]` contains all the elements preceded 
-by `x`. Nil return values denote empty intervals.  When `x` is not 
+by `x`. `i=a-1` and `j=b+1` denote empty intervals.  When `x` is not 
 supplied, an element of the block is selected at random. 
 
 By default `cmp(x,y)` means `x<y`, respecting metamethods. When `cmp`

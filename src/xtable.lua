@@ -5,8 +5,10 @@ if type(X)~='table' then error(X) end
 
 local B=X.block
 local T=X.tuple
-local select,      abs,      max,      min,           wrap,           yield
-    = select, math.abs, math.max, math.min, coroutine.wrap, coroutine.yield
+local select,           wrap,           yield =
+      select, coroutine.wrap, coroutine.yield
+local random,      abs,      max,      min =
+ math.random, math.abs, math.max, math.min
 
 -- Lua implementations of documented functions
 
@@ -14,7 +16,7 @@ local xsort
 xsort = function (tbl,cmp,first,last)
   first, last = first or 1, last or #tbl
   if last<=first then return end
-  local i,j = B.trisect(tbl,first,last,cmp)
+  local i,j = B.trisect(tbl,first,last,cmp,tbl[random(first,last)])
   xsort(tbl,cmp,first,i)
   xsort(tbl,cmp,j,last)
 end  
@@ -120,7 +122,7 @@ end
 local sort
 sort = function (tbl,cmp,first,last,p)
   if last<=first then return end
-  local i,j = trisect(tbl,first,last,cmp,nil,p)
+  local i,j = trisect(tbl,first,last,cmp,tbl[random(first,last)],p)
   sort(tbl,cmp,first,i,p)
   sort(p,nil,i+1,j-1,tbl)
   sort(tbl,cmp,j,last,p)
