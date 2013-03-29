@@ -25,7 +25,8 @@ written in Lua.
 */
 
 
-#include <stddef.h>
+#include <stdlib.h>
+#include <time.h>
 
 #include "lua.h"
 #include "lauxlib.h"
@@ -80,6 +81,7 @@ static int block_set(lua_State *L) {
     store(tbl,item++,a); 
     if(a==b) break; 
   }
+  return 0;
 }   
 
 /* block.move(tbl,a1,b1,a2,b2) */
@@ -151,15 +153,17 @@ static int tuple_keep(lua_State *L) {
 #define precedes(i,j) (lua_isnoneornil(L,cmp)? lua_compare(L,i,j,LUA_OPLT): \
     (lua_pushvalue(L,cmp), lua_pushvalue(L,i), lua_pushvalue(L,j), \
     lua_call(L,2,1), test=lua_toboolean(L,-1), lua_pop(L,1), test))
+static unsigned randseed;
 static int block_trisect(lua_State *L) {
   int lo=luaL_checkint(L,2), hi=luaL_checkint(L,3),
     lt=lo, gt=hi, i=lo, tmp, test, hastag=!lua_isnoneornil(L,tag);  
   if (hi<=lo) return 0;
   luaL_checktype(L,tbl,LUA_TTABLE); 
   lua_settop(L,tag);
-  if (lua_isnoneornil(L,v)) { 
-    tmp = lo + random()/1024%(hi-lo+1);
-    lua_rawgeti(L,tbl,tmp); lua_replace(L,v); 
+  if (lua_isnoneornil(L,v)) { /* no central element? Pick one at random */
+    lua_rawgeti(L,tbl,lo+(unsigned)( (double)(rand_r(&randseed)%RAND_MAX)/
+       RAND_MAX*(hi-lo+1)));
+    lua_replace(L,v); 
   }
   if (!lua_isnoneornil(L,cmp)) {
     luaL_checktype(L,cmp,LUA_TFUNCTION);
@@ -223,8 +227,8 @@ char *xtable_init =
 
 #define makeseed() (unsigned int)time(NULL)
 LUAMOD_API int luaopen_xtable_core (lua_State *L) {
-  srandom(makeseed()); /* initialize the C random number generator */
-  random();            /* throw away the first random number */
+  randseed=makeseed();     /* initialize a private random number generator */
+  (void)rand_r(&randseed);           /* throw away the first random number */
   lua_createtable(L,8,0);
   luaL_newlib(L, block_funcs);
   lua_setfield(L,-2,"block");

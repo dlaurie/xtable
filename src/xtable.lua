@@ -12,7 +12,7 @@ local select,      abs,      max,      min,           wrap,           yield
 
 local xsort
 xsort = function (tbl,cmp,first,last)
-  first, last = first or 1, last or #a
+  first, last = first or 1, last or #tbl
   if last<=first then return end
   local i,j = B.trisect(tbl,first,last,cmp)
   xsort(tbl,cmp,first,i)

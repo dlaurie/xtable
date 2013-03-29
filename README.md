@@ -6,7 +6,7 @@ standard table library.
 
 The project started as a drop-in replacement for the standard table 
 library, incorporating a selection of extra features that have on 
-occasion been requested on this list (e.g. multiple insert/remove; 
+occasion been requested on the 'lua-l' list (e.g. multiple insert/remove; 
 negative indices; list integrity maintenance). The authors gradually 
 realized that no two Lua users can be made to agree on just which 
 extra features are desirable, and moved to a model of C core functions 

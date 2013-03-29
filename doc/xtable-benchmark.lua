@@ -58,7 +58,7 @@ sorttest(a,cmp2,cmp1)
 
 print (("== test on %d duples with approximately 20 equals of every value"):
    format(nmax))
-for k=1,nmax do a[k]=setmetatable({k,(59*k)%(nmax%20)},M) end
+for k=1,nmax do a[k]=setmetatable({k,(59*k)%(nmax/20)},M) end
 sorttest(a,cmp2,cmp1)
 
 print (("== test on %d random elements"):format(nmax))
