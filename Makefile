@@ -1,4 +1,4 @@
-VERSION = 1.0
+VERSION = 1.0.1
 
 all: src/xtable.lua src/xtable-manual.txt src/xtable.c
 	make -C src
