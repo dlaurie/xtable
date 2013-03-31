@@ -74,10 +74,6 @@ arguments. The notation `tbl[a:b]` is used for a block of values with
 increasing keys if `a<b` and decreasing keys if `a>b`.
 Thus `tbl[b:a]` is the reverse of `tbl[a:b]`. 
 
-Not documented here are some functions having the same names as 
-functions in the standard table library, written in Lua. They
-are lightly documented in the Lua source code.
-
 * * * * *
 
 ### `xtable.block.get(tbl,a,b)`
@@ -107,17 +103,16 @@ is calculated to satisfy `b2-b1==a2-a1`.
 
 * * * * *
 
-### `xtable.block.trisect(tbl,a,b[,cmp[,x[,tag]]])`
+### `xtable.block.trisect(tbl,a,b,v[,cmp[,tag]]])`
 
 Given `a<b`, partially sorts `tbl[a:b]` into three parts, returning 
 indices `j` and `k` such that `tbl[a:j]` contains all the elements 
-that precede `x` and `tbl[k:b]` contains all the elements preceded 
-by `x`. `i=a-1` and `j=b+1` denote empty intervals.  When `x` is not 
-supplied, an element of the block is selected at random. 
+that precede `v` and `tbl[k:b]` contains all the elements preceded 
+by `v`. `i=a-1` and `j=b+1` denote empty intervals. 
 
-By default `cmp(x,y)` means `x<y`, respecting metamethods. When `cmp`
-is supplied, `cmp(x,y)` is `true` if `x` must precede `y` in the sorted 
-block. 
+By default `cmp(x,y)` means "`x<y`", respecting metamethods. When `cmp`
+is supplied, `cmp(x,y)` means "`y` may not precede `x` in the sorted 
+block". 
  
 When `tag` is supplied, it must be another table. The elements
 corresponding to the keys `a` to `b` will be permuted in exactly 
@@ -183,8 +178,8 @@ Concatenates all its arguments, respecting metamethods.
 <HR>
 <SMALL CLASS="footer">
 Last update:
-xtable-5.2.2-rc3
-Tue Mar 26 23:46:33 SAST 2013
+xtable-1.0.1
+Sun Mar 31 18:27:05 SAST 2013
 </SMALL>
 <!--
 Dirk

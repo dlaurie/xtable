@@ -16,7 +16,7 @@ local xsort
 xsort = function (tbl,cmp,first,last)
   first, last = first or 1, last or #tbl
   if last<=first then return end
-  local i,j = B.trisect(tbl,first,last,cmp,tbl[random(first,last)])
+  local i,j = B.trisect(tbl,first,last,tbl[random(first,last)],cmp)
   xsort(tbl,cmp,first,i)
   xsort(tbl,cmp,j,last)
 end  
@@ -122,7 +122,7 @@ end
 local sort
 sort = function (tbl,cmp,first,last,p)
   if last<=first then return end
-  local i,j = trisect(tbl,first,last,cmp,tbl[random(first,last)],p)
+  local i,j = trisect(tbl,first,last,tbl[random(first,last)],cmp,p)
   sort(tbl,cmp,first,i,p)
   sort(p,nil,i+1,j-1,tbl)
   sort(tbl,cmp,j,last,p)
@@ -162,7 +162,7 @@ help(nil,shorthelp)
 help('get',"get(tbl,a,b): return tbl[a:b]")
 help('set',"set(tbl,a,b,...): tbl[a:b]=..., cyclically extended")
 help('move',"move(tbl,a1,b1,a2,b2): tbl[a2:b2]=tbl[a1:b1]}") 
-help('trisect',"i,j = trisect(tbl,a,b[,cmp[,x[,tag]]]): <=a[i+1]=',=a[j-1]<=")
+help('trisect',"i,j = trisect(tbl,a,b,v[,cmp[,tag]]]): <=a[i+1]=',=a[j-1]<=")
 help('cache',"f=cache(...): f() returns original ...")
 help('collect',"collect(...): concatenates ..., respecting metamethods")
 help('iter',"in iter(...): iterates over ...")

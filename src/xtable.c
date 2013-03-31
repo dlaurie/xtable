@@ -144,10 +144,10 @@ static int tuple_keep(lua_State *L) {
   return count;
 }
 
-/* block.trisect(tbl,l,r,cmp,v,tag) */
+/* block.trisect(tbl,l,r,v,cmp,tag) */
 #define tbl 1
-#define cmp 4
-#define v 5
+#define v 4
+#define cmp 5
 #define tag 6
 #define ai 7
 #define precedes(i,j) (lua_isnoneornil(L,cmp)? lua_compare(L,i,j,LUA_OPLT): \
@@ -160,11 +160,7 @@ static int block_trisect(lua_State *L) {
   if (hi<=lo) return 0;
   luaL_checktype(L,tbl,LUA_TTABLE); 
   lua_settop(L,tag);
-  if (lua_isnoneornil(L,v)) { /* no central element? Pick one at random */
-    lua_rawgeti(L,tbl,lo+(unsigned)( (double)(rand_r(&randseed)%RAND_MAX)/
-       RAND_MAX*(hi-lo+1)));
-    lua_replace(L,v); 
-  }
+  luaL_argcheck(L,!lua_isnoneornil(L,v),v,"central value must be supplied");
   if (!lua_isnoneornil(L,cmp)) {
     luaL_checktype(L,cmp,LUA_TFUNCTION);
     luaL_argcheck(L,!precedes(v,v),cmp,
