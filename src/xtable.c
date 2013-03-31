@@ -153,7 +153,6 @@ static int tuple_keep(lua_State *L) {
 #define precedes(i,j) (lua_isnoneornil(L,cmp)? lua_compare(L,i,j,LUA_OPLT): \
     (lua_pushvalue(L,cmp), lua_pushvalue(L,i), lua_pushvalue(L,j), \
     lua_call(L,2,1), test=lua_toboolean(L,-1), lua_pop(L,1), test))
-static unsigned randseed;
 static int block_trisect(lua_State *L) {
   int lo=luaL_checkint(L,2), hi=luaL_checkint(L,3),
     lt=lo, gt=hi, i=lo, tmp, test, hastag=!lua_isnoneornil(L,tag);  
@@ -221,10 +220,7 @@ char *xtable_init =
 "X=nil"
 ;
 
-#define makeseed() (unsigned int)time(NULL)
 LUAMOD_API int luaopen_xtable_core (lua_State *L) {
-  randseed=makeseed();     /* initialize a private random number generator */
-  (void)rand_r(&randseed);           /* throw away the first random number */
   lua_createtable(L,8,0);
   luaL_newlib(L, block_funcs);
   lua_setfield(L,-2,"block");
