@@ -108,7 +108,7 @@ is calculated to satisfy `b2-b1==a2-a1`.
 Given `a<b`, partially sorts `tbl[a:b]` into three parts, returning 
 indices `j` and `k` such that `tbl[a:j]` contains all the elements 
 that precede `v` and `tbl[k:b]` contains all the elements preceded 
-by `v`. `i=a-1` and `j=b+1` denote empty intervals. 
+by `v`. `j=a-1` and `k=b+1` denote empty intervals. 
 
 By default `cmp(x,y)` means "`x<y`", respecting metamethods. When `cmp`
 is supplied, `cmp(x,y)` means "`y` may not precede `x` in the sorted 
