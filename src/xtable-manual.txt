@@ -41,7 +41,7 @@ stack and of fast C loops. They do not supply default table limits
 (neither 1 nor `#tbl`).
 
 Besides the core functions, the sublibraries contain some sample 
-applications written in Lua not documented here, but briefly described
+applications not documented here, but briefly described
 by comments in the Lua source code.  If your system has 
 [Lua interactive help](https://github.com/dlaurie/lua-ihelp) installed,
 these comments are available via `xtable.help()`; otherwise consult 
@@ -50,9 +50,9 @@ the separate document [`sample.html`](sample.html) made by
 
 ## The xtable library
 
-The main library is initialized to the six functions of the standard
-table library when the core C package is loaded.  The routine
-described below is defined in `xtable.lua`.
+The main library is initialized to the functions currently in the 
+standard `table` library when the core C package is loaded.
+The routine described below is defined in `xtable.lua`.
 
 * * * * *
 
@@ -67,7 +67,7 @@ equal.
 ## The block sublibrary
 
 This sublibrary provides basic functions for manipulating blocks 
-of continuous elements in a table. 
+of contiguous elements in a table. 
 
 These functions all have a table and two integers as their first three
 arguments. The notation `tbl[a:b]` is used for a block of values with 

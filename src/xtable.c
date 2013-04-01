@@ -32,7 +32,7 @@ written in Lua.
 #include "lauxlib.h"
 #include "lualib.h"
 
-/* For debugging. I've put these back too often to omit them now. */
+/* For debugging. I've put these back too often to omit them altogether.
 static void stackprint(lua_State *L, int from) {
    int top=lua_gettop(L);
    printf("Stack:");
@@ -48,6 +48,7 @@ static void arrayprint(lua_State *L, int from, int to) {
      lua_pop(L,2); }
    printf("\n");
 }
+ */
 
 #define store(tbl,item,idx) lua_pushvalue(L,item); lua_rawseti(L,1,idx)
 #define move(a,from,to) lua_rawgeti(L,a,from); lua_rawseti(L,a,to)
@@ -155,7 +156,7 @@ static int tuple_keep(lua_State *L) {
     lua_call(L,2,1), test=lua_toboolean(L,-1), lua_pop(L,1), test))
 static int block_trisect(lua_State *L) {
   int lo=luaL_checkint(L,2), hi=luaL_checkint(L,3),
-    lt=lo, gt=hi, i=lo, tmp, test, hastag=!lua_isnoneornil(L,tag);  
+    lt=lo, gt=hi, i=lo, test, hastag=!lua_isnoneornil(L,tag);  
   if (hi<=lo) return 0;
   luaL_checktype(L,tbl,LUA_TTABLE); 
   lua_settop(L,tag);
@@ -227,7 +228,7 @@ LUAMOD_API int luaopen_xtable_core (lua_State *L) {
   luaL_newlib(L, tuple_funcs);
   lua_setfield(L,-2,"tuple");
   lua_pushvalue(L,-1); lua_setglobal(L,"X"); 
-  luaL_dostring(L,xtable_init); 
+  (void)luaL_dostring(L,xtable_init); 
   return 1;
 }
 

@@ -23,14 +23,14 @@ by John Hind and Dirk Laurie
 <p>This library provides generic functions for table manipulation. All its functions are delivered in a table returned by <code>require'xtable'</code>, here assumed to be assigned to <code>xtable</code>, and its subtables <code>xtable.block</code> and <code>xtable.tuple</code>.</p>
 <p>The project started as a drop-in replacement for the standard table library, incorporating a selection of extra features (e.g. multiple insert/remove; negative indices; list integrity maintenance). The authors gradually realized that no two Lua users can be made to agree on just which extra features are desirable, and moved to a model of C core functions with a Lua top layer.</p>
 <p>These core C routines perform tasks that can take advantage of the stack and of fast C loops. They do not supply default table limits (neither 1 nor <code>#tbl</code>).</p>
-<p>Besides the core functions, the sublibraries contain some sample applications written in Lua not documented here, but briefly described by comments in the Lua source code. If your system has <a href="https://github.com/dlaurie/lua-ihelp">Lua interactive help</a> installed, these comments are available via <code>xtable.help()</code>; otherwise consult the separate document <a href="sample.html"><code>sample.html</code></a> made by <a href="http://stevedonovan.github.com/ldoc">LDoc</a>.</p>
+<p>Besides the core functions, the sublibraries contain some sample applications not documented here, but briefly described by comments in the Lua source code. If your system has <a href="https://github.com/dlaurie/lua-ihelp">Lua interactive help</a> installed, these comments are available via <code>xtable.help()</code>; otherwise consult the separate document <a href="sample.html"><code>sample.html</code></a> made by <a href="http://stevedonovan.github.com/ldoc">LDoc</a>.</p>
 <h2 id="the-xtable-library">The xtable library</h2>
-<p>The main library is initialized to the six functions of the standard table library when the core C package is loaded. The routine described below is defined in <code>xtable.lua</code>.</p>
+<p>The main library is initialized to the functions currently in the standard <code>table</code> library when the core C package is loaded. The routine described below is defined in <code>xtable.lua</code>.</p>
 <hr />
 <h3 id="xtable.sorttblcmpfirstlast"><code>xtable.sort(tbl,cmp[,first,last])</code></h3>
 <p>See the Lua Reference Manual for <code>cmp</code>. This routine replaces <code>table.sort</code>, from which it differs in two ways: explicit limits can be specified, and it uses a slightly different algorithm which is somewhat slower on the average, but much faster when the table contains many elements that test equal.</p>
 <h2 id="the-block-sublibrary">The block sublibrary</h2>
-<p>This sublibrary provides basic functions for manipulating blocks of continuous elements in a table.</p>
+<p>This sublibrary provides basic functions for manipulating blocks of contiguous elements in a table.</p>
 <p>These functions all have a table and two integers as their first three arguments. The notation <code>tbl[a:b]</code> is used for a block of values with increasing keys if <code>a&lt;b</code> and decreasing keys if <code>a&gt;b</code>. Thus <code>tbl[b:a]</code> is the reverse of <code>tbl[a:b]</code>.</p>
 <hr />
 <h3 id="xtable.block.gettblab"><code>xtable.block.get(tbl,a,b)</code></h3>
