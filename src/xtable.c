@@ -217,8 +217,8 @@ static const luaL_Reg tuple_funcs[] = {
 /* startup Lua code 
 */
 char *xtable_init = 
-"for k,v in pairs(table) do X[k]=v end "
-"X=nil"
+"for k,v in pairs(table) do xtable_core[k]=v end "
+"xtable_core=nil"
 ;
 
 LUAMOD_API int luaopen_xtable_core (lua_State *L) {
@@ -227,7 +227,7 @@ LUAMOD_API int luaopen_xtable_core (lua_State *L) {
   lua_setfield(L,-2,"block");
   luaL_newlib(L, tuple_funcs);
   lua_setfield(L,-2,"tuple");
-  lua_pushvalue(L,-1); lua_setglobal(L,"X"); 
+  lua_pushvalue(L,-1); lua_setglobal(L,"xtable_core"); 
   (void)luaL_dostring(L,xtable_init); 
   return 1;
 }
