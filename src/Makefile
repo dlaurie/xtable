@@ -1,5 +1,7 @@
 all: ../doc/xtable-manual.html ../doc/test-xtable.out ../doc/sample.html
 
+CFLAGS = -fPIC
+
 %.out: %.lua xtable.lua xtable_core.so
 	lua $*.lua > $*.out
 
@@ -10,5 +12,5 @@ all: ../doc/xtable-manual.html ../doc/test-xtable.out ../doc/sample.html
 	ldoc.lua -f markdown -o sample -d ../doc xtable.lua
 
 xtable_core.so: xtable.c
-	cc -pedantic-errors -shared xtable.c -o xtable_core.so
+	cc $(CFLAGS) -pedantic-errors -shared xtable.c -o xtable_core.so
 

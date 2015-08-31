@@ -57,7 +57,7 @@ static void arrayprint(lua_State *L, int from, int to) {
 
 /* block.get(tbl,a,b) */
 static int block_get(lua_State *L) {
-  int a=luaL_checkint(L,2), b=luaL_checkint(L,3), inc, count;
+  int a=luaL_checkinteger(L,2), b=luaL_checkinteger(L,3), inc, count;
   luaL_checktype(L,1,LUA_TTABLE);
   inc = a<=b ? 1 : -1; 
   count = (b-a)*inc+1;
@@ -70,10 +70,10 @@ static int block_get(lua_State *L) {
 
 /* _block.set(tbl,a,b,...) */
 static int block_set(lua_State *L) {
-  int a=luaL_checkint(L,2), b, top=lua_gettop(L), count=top-3, 
+  int a=luaL_checkinteger(L,2), b, top=lua_gettop(L), count=top-3, 
       inc, item=4;
   luaL_checktype(L,1,LUA_TTABLE);
-  b = (lua_isnoneornil(L,3)) ? a+count-1 : luaL_checkint(L,3);
+  b = (lua_isnoneornil(L,3)) ? a+count-1 : luaL_checkinteger(L,3);
   if (count<1) return 0;  
   inc = a<=b ? 1 : -1; 
   if (top==4) for(;;a+=inc) { store(tbl,top,a); if(a==b) break; }
@@ -87,13 +87,13 @@ static int block_set(lua_State *L) {
 
 /* block.move(tbl,a1,b1,a2,b2) */
 static int block_move(lua_State *L) {
-  int a1=luaL_checkint(L,2), b1=luaL_checkint(L,3), 
-      a2=luaL_checkint(L,4), b2, inc1, inc2;
+  int a1=luaL_checkinteger(L,2), b1=luaL_checkinteger(L,3), 
+      a2=luaL_checkinteger(L,4), b2, inc1, inc2;
   luaL_checktype(L,1,LUA_TTABLE);
   inc1 = a1<=b1 ? 1 : -1; 
   if (lua_isnoneornil(L,5)) { inc2=inc1; b2=a2+b1-a1; }
   else {
-    b2=luaL_checkint(L,5);
+    b2=luaL_checkinteger(L,5);
     inc2 = a2<=b2 ? 1 : -1; 
     luaL_argcheck(L,(b1-a1)*inc1==(b2-a2)*inc2,5,
        "source and destination must have the same length");
@@ -140,7 +140,7 @@ static int tuple_collect(lua_State *L) {
 
 /* tuple.keep(count,...) */
 static int tuple_keep(lua_State *L) {
-  int count=lua_absindex(L,luaL_checkint(L,1));
+  int count=lua_absindex(L,luaL_checkinteger(L,1));
   lua_settop(L,count+1);
   return count;
 }
@@ -155,7 +155,7 @@ static int tuple_keep(lua_State *L) {
     (lua_pushvalue(L,cmp), lua_pushvalue(L,i), lua_pushvalue(L,j), \
     lua_call(L,2,1), test=lua_toboolean(L,-1), lua_pop(L,1), test))
 static int block_trisect(lua_State *L) {
-  int lo=luaL_checkint(L,2), hi=luaL_checkint(L,3),
+  int lo=luaL_checkinteger(L,2), hi=luaL_checkinteger(L,3),
     lt=lo, gt=hi, i=lo, test, hastag=!lua_isnoneornil(L,tag);  
   if (hi<=lo) return 0;
   luaL_checktype(L,tbl,LUA_TTABLE); 
