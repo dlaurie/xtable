@@ -10,12 +10,6 @@ local select,           wrap,           yield =
 local random,      abs,      max,      min =
  math.random, math.abs, math.max, math.min
 
--- Compatibility
-
-B.move = function(tbl,a1,b1,a2,b2)
-   B.copy(tbl,a1,b1,tbl,a2,b2)
-end
-
 -- Lua implementations of documented functions
 
 local xsort
