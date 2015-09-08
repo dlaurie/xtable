@@ -31,7 +31,7 @@ The library contains two sublibraries: `xtable.block` and `xtable.tuple`.
 that will be used mainly as an array. Every function has the same
 first three arguments `tbl,a,b` and operates on the elements from
 `tbl[a]` to `tbl[b]`, where decreasing keys are taken when `a>b`.
-The functions `get`, `set`, `move` and `trisect` are provided in
+The functions `get`, `set`, `copy` and `trisect` are provided in
 the C core; `concat`, `insert`, `remove` and `sort`, which in various 
 ways offer more than their namesakes from the standard library, are 
 provided in the Lua top layer.

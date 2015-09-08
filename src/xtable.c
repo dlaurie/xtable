@@ -1,27 +1,17 @@
-/* xtable.c      (c) 2012-2013 Dirk Laurie and John Hind 
+/* xtable.c      (c) 2012-2015 Dirk Laurie and John Hind 
       Enhanced version of the Lua table library
-   Same license as Lua 5.2.2 (c) 1994-2012 Lua.org, PUC-Rio
+   Same license as Lua (c) 1994-2015 Lua.org, PUC-Rio
       from which much of the code has been borrowed anyway.
+
+Install using LuaRocks, see INSTALL.
 */
-
-/* on Linux compile  with `cc -shared xtable.c -o xtable.so` */
-
-/* on Windows, define the symbols 'LUA_BUILD_AS_DLL' and 'LUA_LIB' and
- * compile and link with stub library lua52.lib (for lua52.dll)
- * generating xtable.dll. If necessary, generate lua52.lib and lua52.dll by 
- * compiling Lua sources with 'LUA_BUILD_AS_DLL' defined.
-*/
-
-/* To test, run `lua test-xtable.lua`. The results should be the same as
- * in the file `test-xtable.out`.
- * Full documentation in xtable-manual.html */   
 
 /* Program design notes
 
-Only a few building blocks are written in C and exported in the 
-subtables `block` and `tuple`.  The rest of the functionality is 
-written in Lua. 
-
+Only a few building blocks are written in C and exported in the subtables 
+`block` and `tuple`. The rest of the functionality is written in Lua. The 
+existing table library is imported into the module table from C; the rest 
+is defined in `xtable.lua`.
 */
 
 
@@ -85,8 +75,8 @@ static int block_set(lua_State *L) {
   return 0;
 }   
 
-/* block.move(tbl,a1,b1,a2,b2) */
-static int block_move(lua_State *L) {
+/* block.copy(tbl,a1,b1,a2[,b2]) */
+static int block_copy(lua_State *L) {
   int a1=luaL_checkinteger(L,2), b1=luaL_checkinteger(L,3), 
       a2=luaL_checkinteger(L,4), b2, inc1, inc2;
   luaL_checktype(L,1,LUA_TTABLE);
@@ -201,7 +191,7 @@ static int block_trisect(lua_State *L) {
 static const luaL_Reg block_funcs[] = {
   {"get", block_get},
   {"set", block_set},
-  {"move", block_move},
+  {"copy", block_copy},
   {"trisect",block_trisect},
   {NULL, NULL}
 };

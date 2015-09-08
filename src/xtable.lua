@@ -10,6 +10,10 @@ local select,           wrap,           yield =
 local random,      abs,      max,      min =
  math.random, math.abs, math.max, math.min
 
+-- Compatibility
+
+B.move =  B.copy
+
 -- Lua implementations of documented functions
 
 local xsort

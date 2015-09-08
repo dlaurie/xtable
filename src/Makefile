@@ -1,3 +1,15 @@
+# Linux Makefile. Don't use this if you are not a developer or maintainer. 
+# Install via LuaRocks instead.
+#
+# The original 2012 instruction hints are:
+#
+#  on Linux compile  with `cc -shared xtable.c -o xtable.so`
+#
+#  on Windows, define the symbols 'LUA_BUILD_AS_DLL' and 'LUA_LIB' and
+#  compile and link with stub library lua52.lib (for lua52.dll)
+#  generating xtable.dll. If necessary, generate lua52.lib and lua52.dll by 
+#  compiling Lua sources with 'LUA_BUILD_AS_DLL' defined.
+
 all: ../doc/xtable-manual.html ../doc/test-xtable.out ../doc/sample.html
 
 LUA_5_2 = /usr/local/bin/lua5.2
@@ -11,17 +23,19 @@ INC = $(INC_5_3)
 
 CFLAGS = -fPIC -I$(INC)
 
-%.out: %.lua xtable.lua xtable_core.so
+%.out: %.lua xtable.lua ../lib/xtable_core.so
+	cp ../lib/xtable_core.so .
 	$(LUA) $*.lua > $*.out
+	rm xtable_core.so
 
 ../doc/xtable-manual.html: xtable-manual.txt
 	pandoc xtable-manual.txt -o ../doc/xtable-manual.html
 
 ../doc/sample.html: xtable.lua
-	ldoc.lua -f markdown -o sample -d ../doc xtable.lua
+	ldoc -f markdown -o sample -d ../doc xtable.lua
 
-xtable_core.so: xtable.c
-	cc -std=c99 $(CFLAGS) -pedantic-errors -shared xtable.c -o xtable_core.so
+../lib/xtable_core.so: xtable.c
+	cc -std=c99 $(CFLAGS) -pedantic-errors -shared xtable.c -o ../lib/xtable_core.so
 
 clean:
 	rm xtable_core.so 	

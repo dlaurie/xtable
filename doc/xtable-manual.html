@@ -3,7 +3,7 @@
 
 <head>
 <title>
-Enhanced table library for Lua 5.2
+Enhanced table library for Lua
 </title>
 <link rel="stylesheet" type="text/css" href="xtable.css"> <META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
 </head>
@@ -12,41 +12,42 @@ Enhanced table library for Lua 5.2
 
 <hr>
 <h1>
-<a href="http://www.lua.org/"><img src="logo.gif" alt="" border="0"></a> Enhanced table library for Lua 5.2
+<a href="http://www.lua.org/"><img src="logo.gif" alt="" border="0"></a> Enhanced table library for Lua 5.1/5.2/5.3
 </h1>
 by John Hind and Dirk Laurie
 <p>
-<small> Copyright © 2013. Freely available under the terms of the <a href="http://www.lua.org/license.html">Lua license</a>. </small>
+<small> Copyright © 2013-2015. Freely available under the terms of the <a href="http://www.lua.org/license.html">Lua license</a>. </small>
 <hr>
 <p>
 
-<p>This library provides generic functions for table manipulation. All its functions are delivered in a table returned by <code>require'xtable'</code>, here assumed to be assigned to <code>xtable</code>, and its subtables <code>xtable.block</code> and <code>xtable.tuple</code>.</p>
-<p>The project started as a drop-in replacement for the standard table library, incorporating a selection of extra features (e.g. multiple insert/remove; negative indices; list integrity maintenance). The authors gradually realized that no two Lua users can be made to agree on just which extra features are desirable, and moved to a model of C core functions with a Lua top layer.</p>
+<p>This library provides generic functions for table manipulation. All its functions are delivered in a table <code>xtable</code> created by <code>require 'xtable'</code>, which is a global value in Lua 5.1, and a return value in Lua 5.2 and 5.3, and its subtables <code>xtable.block</code> and <code>xtable.tuple</code>.</p>
+<p>The project started as a drop-in replacement for the standard table library, incorporating a selection of extra features (e.g. multiple insert/remove; negative indices; list integrity maintenance). The authors gradually realized that no two Lua users can be made to agree on just which extra features are desirable, and moved to a model of basic C core functions with a Lua top layer.</p>
 <p>These core C routines perform tasks that can take advantage of the stack and of fast C loops. They do not supply default table limits (neither 1 nor <code>#tbl</code>).</p>
 <p>Besides the core functions, the sublibraries contain some sample applications not documented here, but briefly described by comments in the Lua source code. If your system has <a href="https://github.com/dlaurie/lua-ihelp">Lua interactive help</a> installed, these comments are available via <code>xtable.help()</code>; otherwise consult the separate document <a href="sample.html"><code>sample.html</code></a> made by <a href="http://stevedonovan.github.com/ldoc">LDoc</a>.</p>
 <h2 id="the-xtable-library">The xtable library</h2>
-<p>The main library is initialized to the functions currently in the standard <code>table</code> library when the core C package is loaded. The routine described below is defined in <code>xtable.lua</code>.</p>
+<p>The main library is initialized when the core C package is loaded to contain the functions currently in the standard <code>table</code> library. As from Lua 5.3, this includes <code>table.move</code>.</p>
+<p>The replacement <code>sort</code> routine described below is defined in the file <code>xtable.lua</code>.</p>
 <hr />
 <h3 id="xtable.sorttblcmpfirstlast"><code>xtable.sort(tbl,cmp[,first,last])</code></h3>
 <p>See the Lua Reference Manual for <code>cmp</code>. This routine replaces <code>table.sort</code>, from which it differs in two ways: explicit limits can be specified, and it uses a slightly different algorithm which is somewhat slower on the average, but much faster when the table contains many elements that test equal.</p>
 <h2 id="the-block-sublibrary">The block sublibrary</h2>
 <p>This sublibrary provides basic functions for manipulating blocks of contiguous elements in a table.</p>
-<p>These functions all have a table and two integers as their first three arguments. The notation <code>tbl[a:b]</code> is used for a block of values with increasing keys if <code>a&lt;b</code> and decreasing keys if <code>a&gt;b</code>. Thus <code>tbl[b:a]</code> is the reverse of <code>tbl[a:b]</code>.</p>
+<p>These functions all have a table and two integers as their first three arguments. The notation <code>tbl[a:b]</code> is used for a block of values with increasing keys if <code>a&lt;b</code> and decreasing keys if <code>a&gt;b</code>, so that <code>tbl[b:a]</code> is the reverse of <code>tbl[a:b]</code>, except in <code>trisect</code>.</p>
 <hr />
 <h3 id="xtable.block.gettblab"><code>xtable.block.get(tbl,a,b)</code></h3>
-<p>Returns <code>tbl[a:b]</code>. This function may cause stack overflow if too many items are requested.</p>
+<p>Multiple-returns the values in <code>tbl[a:b]</code>. This function may cause stack overflow if too many items are requested.</p>
 <hr />
 <h3 id="xtable.block.settblab..."><code>xtable.block.set(tbl,a,b,...)</code></h3>
 <p>Sets <code>tbl[a:b]</code> to the given values, overwriting existing values.</p>
 <p>If the vararg list is empty (not even containing <code>nil</code>), stores nothing. The list is treated cyclically: if it is exhausted before <code>b</code> is reached, the supply of values is resumed from its beginning. If <code>b</code> is nil, values are stored in <code>tbl[a],tbl[a+1],...</code> until the list is exhausted.</p>
 <hr />
-<h3 id="xtable.block.movetbla1b1a2b2"><code>xtable.block.move(tbl,a1,b1,a2[,b2])</code></h3>
-<p>Moves <code>tbl[a1:b1]</code> to <code>tbl[a2:b2]</code>, overwriting existing values but not erasing anything. If the last parameter is omitted or nil, <code>b2</code> is calculated to satisfy <code>b2-b1==a2-a1</code>.</p>
+<h3 id="xtable.block.copytbla1b1a2b2"><code>xtable.block.copy(tbl,a1,b1,a2[,b2])</code></h3>
+<p>Copiess <code>tbl[a1:b1]</code> to <code>dest[a2:b2]</code>, overwriting existing values but not erasing anything. If <code>b2</code> is omitted or nil, it is calculated to satisfy <code>b2-b1==a2-a1</code>.</p>
 <hr />
 <h3 id="xtable.block.trisecttblabvcmptag"><code>xtable.block.trisect(tbl,a,b,v[,cmp[,tag]]])</code></h3>
-<p>Given <code>a&lt;b</code>, partially sorts <code>tbl[a:b]</code> into three parts, returning indices <code>j</code> and <code>k</code> such that <code>tbl[a:j]</code> contains all the elements that precede <code>v</code> and <code>tbl[k:b]</code> contains all the elements preceded by <code>v</code>. <code>j=a-1</code> and <code>k=b+1</code> denote empty intervals.</p>
+<p>Given <code>a&lt;b</code>, partially sorts <code>tbl[a:b]</code> into three parts, containing respectively the elements less than, equal to and greater than <code>v</code>. Returns indices <code>j</code> and <code>k</code> such that <code>tbl[a:j]</code> and <code>tbl[k:b]</code> are respectively the first and third parts. <code>j=a-1</code> and <code>k=b+1</code> denote empty intervals.</p>
 <p>By default <code>cmp(x,y)</code> means &quot;<code>x&lt;y</code>&quot;, respecting metamethods. When <code>cmp</code> is supplied, <code>cmp(x,y)</code> means &quot;<code>y</code> may not precede <code>x</code> in the sorted block&quot;.</p>
-<p>When <code>tag</code> is supplied, it must be another table. The elements corresponding to the keys <code>a</code> to <code>b</code> will be permuted in exactly the same way that the <code>tbl</code> array is.</p>
+<p>When <code>tag</code> is supplied, it must be another table. Its elements corresponding to the keys <code>a</code> to <code>b</code> will be permuted in exactly the same way that the <code>tbl</code> array is.</p>
 <p><code>trisect</code> is just a couple of recursive calls short of a full sort routine, but is made available separately so that it can also be used to implement stable sorting and to return the sorting permutation. See the code of <code>xtable.sort</code> and <code>xtable.block.sort</code>.</p>
 <h2 id="the-tuple-sublibrary">The tuple sublibrary</h2>
 <p>This library provides basic functions for manipulating tuples, i.e. immutable lists of values on the runtime stack. The functions are supplied in the table <code>xtable.tuple</code>.</p>
@@ -68,7 +69,9 @@ by John Hind and Dirk Laurie
 <hr />
 <h3 id="xtable.tuple.collect..."><code>xtable.tuple.collect(...)</code></h3>
 <p>Concatenates all its arguments, respecting metamethods.</p>
+<h2 id="incompatibilities-with-the-previous-version">Incompatibilities with the previous version</h2>
+<p><code>xtable.block.move</code> was renamed in Version 1.0.3 to <code>xtable.block.copy</code> to avoid confusion with <code>xtable.move</code>. The old name is still available but deprecated.</p>
 <HR>
-<p><SMALL CLASS="footer"> Last update: xtable-1.0.1 Sun Mar 31 18:27:05 SAST 2013 </SMALL> <!--
+<p><SMALL CLASS="footer"> Last update: xtable-1.0.3 Sat Sep 5 20:04:41 SAST 2015 </SMALL> <!--
 Dirk
 --></p>

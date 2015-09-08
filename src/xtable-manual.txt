@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>Enhanced table library for Lua 5.2</title>
+<title>Enhanced table library for Lua</title>
 <link rel="stylesheet" type="text/css" href="xtable.css">
 <META HTTP-EQUIV="content-type" CONTENT="text/html; charset=utf-8">
 </head>
@@ -12,29 +12,26 @@
 <hr>
 <h1>
 <a href="http://www.lua.org/"><img src="logo.gif" alt="" border="0"></a>
-Enhanced table library for Lua 5.2
+Enhanced table library for Lua 5.1/5.2/5.3
 </h1>
 by John Hind and Dirk Laurie
 <p>
 <small>
-Copyright &copy; 2013.
+Copyright &copy; 2013-2015.
 Freely available under the terms of the
 <a href="http://www.lua.org/license.html">Lua license</a>.
 </small>
 <hr>
 <p>
 
-This library provides generic functions for table manipulation. All its
-functions are delivered in a table returned by `require'xtable'`, here
-assumed to be assigned to `xtable`, and its subtables `xtable.block`
-and `xtable.tuple`.
+This library provides generic functions for table manipulation. All its functions are delivered in a table `xtable` created by `require 'xtable'`, which is a global value in Lua 5.1, and a return value in Lua 5.2 and 5.3, and its subtables `xtable.block` and `xtable.tuple`.
 
 The project started as a drop-in replacement for the standard table 
 library, incorporating a selection of extra features (e.g. multiple 
 insert/remove; negative indices; list integrity maintenance). The
 authors gradually realized that no two Lua users can be made to agree
-on just which extra features are desirable, and moved to a model of C
-core functions with a Lua top layer.
+on just which extra features are desirable, and moved to a model of 
+basic C core functions with a Lua top layer.
 
 These core C routines perform tasks that can take advantage of the 
 stack and of fast C loops. They do not supply default table limits 
@@ -50,9 +47,12 @@ the separate document [`sample.html`](sample.html) made by
 
 ## The xtable library
 
-The main library is initialized to the functions currently in the 
-standard `table` library when the core C package is loaded.
-The routine described below is defined in `xtable.lua`.
+The main library is initialized when the core C package is loaded to 
+contain the functions currently in the standard `table` library. As from
+Lua 5.3, this includes `table.move`.
+
+The replacement `sort` routine described below is defined in the file 
+`xtable.lua`.
 
 * * * * *
 
@@ -70,16 +70,14 @@ This sublibrary provides basic functions for manipulating blocks
 of contiguous elements in a table. 
 
 These functions all have a table and two integers as their first three
-arguments. The notation `tbl[a:b]` is used for a block of values with 
-increasing keys if `a<b` and decreasing keys if `a>b`.
-Thus `tbl[b:a]` is the reverse of `tbl[a:b]`. 
+arguments. The notation `tbl[a:b]` is used for a block of values with increasing keys if `a<b` and decreasing keys if `a>b`, so that `tbl[b:a]` is the reverse of `tbl[a:b]`, except in `trisect`.
+
 
 * * * * *
 
 ### `xtable.block.get(tbl,a,b)`
 
-Returns `tbl[a:b]`. This function may cause stack overflow
-if too many items are requested.
+Multiple-returns the values in `tbl[a:b]`. This function may cause stack overflow if too many items are requested.
 
 * * * * *
 
@@ -95,26 +93,23 @@ until the list is exhausted.
 
 * * * * *
 
-### `xtable.block.move(tbl,a1,b1,a2[,b2])`
+### `xtable.block.copy(tbl,a1,b1,a2[,b2])`
 
-Moves `tbl[a1:b1]` to `tbl[a2:b2]`, overwriting existing values but 
-not erasing anything.  If the last parameter is omitted or nil, `b2` 
-is calculated to satisfy `b2-b1==a2-a1`.
+Copiess `tbl[a1:b1]` to `dest[a2:b2]`, overwriting existing values but 
+not erasing anything.  If `b2` is omitted or nil, it is calculated to 
+satisfy `b2-b1==a2-a1`.
 
 * * * * *
 
 ### `xtable.block.trisect(tbl,a,b,v[,cmp[,tag]]])`
 
-Given `a<b`, partially sorts `tbl[a:b]` into three parts, returning 
-indices `j` and `k` such that `tbl[a:j]` contains all the elements 
-that precede `v` and `tbl[k:b]` contains all the elements preceded 
-by `v`. `j=a-1` and `k=b+1` denote empty intervals. 
+Given `a<b`, partially sorts `tbl[a:b]` into three parts, containing respectively the elements less than, equal to and greater than `v`. Returns indices `j` and `k` such that `tbl[a:j]` and `tbl[k:b]` are respectively the first and third parts. `j=a-1` and `k=b+1` denote empty intervals.
 
 By default `cmp(x,y)` means "`x<y`", respecting metamethods. When `cmp`
 is supplied, `cmp(x,y)` means "`y` may not precede `x` in the sorted 
 block". 
  
-When `tag` is supplied, it must be another table. The elements
+When `tag` is supplied, it must be another table. Its elements
 corresponding to the keys `a` to `b` will be permuted in exactly 
 the same way that the `tbl` array is.
 
@@ -175,11 +170,17 @@ a function, which is assumed to be unary with one return value.
 
 Concatenates all its arguments, respecting metamethods.
 
+##  Incompatibilities with the previous version
+
+`xtable.block.move` was renamed in Version 1.0.3 to `xtable.block.copy` 
+to avoid confusion with `xtable.move`. The old name is still available 
+but deprecated.
+
 <HR>
 <SMALL CLASS="footer">
 Last update:
-xtable-1.0.1
-Sun Mar 31 18:27:05 SAST 2013
+xtable-1.0.3
+Sat Sep  5 20:04:41 SAST 2015
 </SMALL>
 <!--
 Dirk
