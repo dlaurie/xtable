@@ -4,7 +4,7 @@ Installation from LuaRocks
     luarocks install xtable
     luarocks install ihelp    (optional)
 
-To test, go to the `doc` directory and run `lua test-xtable.lua`. 
+To test, go to the `doc` directory and run `lua -l xtable test-xtable.lua`. 
 The results should be the same as in `test-xtable.out`.
 
 Full documentation in `xtable-manual.html` and `sample.html`.   
@@ -20,5 +20,5 @@ If this does not work, you are on your own. Maybe the terse hints
 in Makefile and src/Makefile will help.
 
 
-Version 1.0.3
-Tue Sep  8 07:53:24 SAST 2015
+Version 1.0-4
+Tue Sep  8 13:00:10 SAST 2015

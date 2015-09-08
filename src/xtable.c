@@ -40,6 +40,12 @@ static void arrayprint(lua_State *L, int from, int to) {
 }
  */
 
+#if LUA_VERSION_NUM < 502
+#define lua_absindex(L,idx) (idx < 0 ? lua_gettop(L)+idx+1 : idx)
+#define lua_compare(L,idx1,idx2,op) 0
+#define LUAMOD_API LUALIB_API
+#endif
+
 #define store(tbl,item,idx) lua_pushvalue(L,item); lua_rawseti(L,1,idx)
 #define move(a,from,to) lua_rawgeti(L,a,from); lua_rawseti(L,a,to)
 #define swap(a,x,y) lua_rawgeti(L,a,x); lua_rawgeti(L,a,y); \
@@ -141,7 +147,12 @@ static int tuple_keep(lua_State *L) {
 #define cmp 5
 #define tag 6
 #define ai 7
-#define precedes(i,j) (lua_isnoneornil(L,cmp)? lua_compare(L,i,j,LUA_OPLT): \
+#if LUA_VERSION_NUM > 501 
+#define lua_lessthan(L,i,j) lua_compare(L,i,j,LUA_OPLT)
+#define lua_equal(L,i,j) lua_compare(L,i,j,LUA_OPEQ)
+#else
+#endif
+#define precedes(i,j) (lua_isnoneornil(L,cmp)? lua_lessthan(L,i,j) : \
     (lua_pushvalue(L,cmp), lua_pushvalue(L,i), lua_pushvalue(L,j), \
     lua_call(L,2,1), test=lua_toboolean(L,-1), lua_pop(L,1), test))
 static int block_trisect(lua_State *L) {
@@ -158,7 +169,7 @@ static int block_trisect(lua_State *L) {
   }
   if (hastag) { 
     luaL_checktype(L,tag,LUA_TTABLE);
-    luaL_argcheck(L,!lua_compare(L,tbl,tag,LUA_OPEQ),tag,
+    luaL_argcheck(L,!lua_equal(L,tbl,tag),tag,
       "the tag table may not be the same as the main table"); }
 /* The following code is based on `sort` from Quick3way.java, described 
    in the 4th edition of "Algorithms" by Robert Sedgewick. The Java code 
@@ -213,9 +224,17 @@ char *xtable_init =
 
 LUAMOD_API int luaopen_xtable_core (lua_State *L) {
   lua_createtable(L,8,0);
+#if LUA_VERSION_NUM > 501
   luaL_newlib(L, block_funcs);
+#else
+  luaL_register(L, "xtable.block", block_funcs);
+#endif
   lua_setfield(L,-2,"block");
+#if LUA_VERSION_NUM > 501
   luaL_newlib(L, tuple_funcs);
+#else
+  luaL_register(L, "xtable.block", tuple_funcs);
+#endif
   lua_setfield(L,-2,"tuple");
   lua_pushvalue(L,-1); lua_setglobal(L,"xtable_core"); 
   (void)luaL_dostring(L,xtable_init); 

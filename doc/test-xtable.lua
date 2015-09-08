@@ -1,3 +1,5 @@
+package.path = "./?.lua"
+package.cpath = "./?.so"
 X = require "xtable"
 B = X.block
 T = X.tuple
@@ -9,6 +11,7 @@ block = function(tbl)
 }) 
 end
 
+print("Module 'xtable' for ".._VERSION)
 print"  reverse sort demo"
 a=block{1,2,4,3,5,4,6,7,4,8,9,4}
 print("tbl:",a)

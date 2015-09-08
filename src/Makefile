@@ -12,19 +12,22 @@
 
 all: ../doc/xtable-manual.html ../doc/test-xtable.out ../doc/sample.html
 
+LUA_5_1 = /usr/bin/lua5.1
 LUA_5_2 = /usr/local/bin/lua5.2
 LUA_5_3 = /usr/local/bin/lua5.3
 
+INC_5_1 = /usr/include/lua5.1
 INC_5_2 = /usr/local/include/lua5.2
 INC_5_3 = /usr/local/include/lua5.3
 
 LUA = $(LUA_5_3)
 INC = $(INC_5_3)
 
+CORE = ../lib/xtable_core.so
 CFLAGS = -fPIC -I$(INC)
 
-%.out: %.lua xtable.lua ../lib/xtable_core.so
-	cp ../lib/xtable_core.so .
+%.out: %.lua xtable.lua $(CORE)
+	cp $(CORE) xtable_core.so
 	$(LUA) $*.lua > $*.out
 	rm xtable_core.so
 
@@ -35,7 +38,7 @@ CFLAGS = -fPIC -I$(INC)
 	ldoc -f markdown -o sample -d ../doc xtable.lua
 
 ../lib/xtable_core.so: xtable.c
-	cc -std=c99 $(CFLAGS) -pedantic-errors -shared xtable.c -o ../lib/xtable_core.so
+	cc -std=c99 $(CFLAGS) -pedantic-errors -shared xtable.c -o $(CORE)
 
 clean:
-	rm xtable_core.so 	
+	rm $(CORE) 	

@@ -34,7 +34,7 @@
 
 
 <h2>Modules</h2>
-<ul>
+<ul class="$(kind=='Topics' and '' or 'nowrap'">
   <li><strong>xtable</strong></li>
 </ul>
 
@@ -43,13 +43,12 @@
 <div id="content">
 
 <h1>Module <code>xtable</code></h1>
-
 <p>The formally documented functions are not described again below,
  although brief help is available via the interactive help system
  available from  <a href="https://github.com/dlaurie/lua-ihelp">https://github.com/dlaurie/lua-ihelp</a>.</p>
 <p> If the module has been installed on your system, <code>xtable.help()</code>
  gets you started, otherwise <code>xtable.help</code> contains the error message
- from <a href="http://www.lua.org/manual/5.1/manual.html#pdf-require">require</a> . </p>
+ from <a href="http://www.lua.org/manual/5.1/manual.html#pdf-require">require</a>. </p>
 
 <p> The informally documented functions (<code>B=xtable.block</code>) below are sample
  routines for the user to adapt. The comments are recognized by the
@@ -57,7 +56,7 @@
  LDoc system <a href="http://stevedonovan.github.com/ldoc">http://stevedonovan.github.com/ldoc</a> for automatically
  generating standalone documentation.</p>
 
-<p> Nonstandard <a href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a> -like functions go into the block submodule;
+<p> Nonstandard <a href="http://www.lua.org/manual/5.1/manual.html#5.5">table</a>-like functions go into the block submodule;
  replacements of standard ones go into the main module.</p>
 
 <p> Recommendation: <code>setmetatable(tbl,{__index=xtable.block})</code></p>
@@ -66,28 +65,28 @@
 <h2><a href="#Functions">Functions</a></h2>
 <table class="function_list">
 	<tr>
-	<td class="name" nowrap><a href="#B.concat">B.concat&nbsp;(tbl, sep, first, last)</a></td>
+	<td class="name" nowrap><a href="#B.concat">B.concat (tbl, sep, first, last)</a></td>
 	<td class="summary">concat(tbl,sep,first,last) <br/>
  standard: second argument is used as a separator if a number or a string <br/>
  extra: second argument is used as a filter if a function <br/>
- nonstandard: <code>sep</code>=<code>nil</code> defaults to <a href="http://www.lua.org/manual/5.1/manual.html#pdf-tostring">tostring</a> , not to the empty string <br/>
+ nonstandard: <code>sep</code>=<code>nil</code> defaults to <a href="http://www.lua.org/manual/5.1/manual.html#pdf-tostring">tostring</a>, not to the empty string <br/>
  extra: concatenation respects metamethods <br/>
  missing: elegant workaround for stack overflow</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#B.insert">B.insert&nbsp;(tbl, index, ...)</a></td>
+	<td class="name" nowrap><a href="#B.insert">B.insert (tbl, index, ...)</a></td>
 	<td class="summary">insert(tbl,index,...) <br/>
  extra: multiple insert <br/>
  missing: parameter checks</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#B.remove">B.remove&nbsp;(tbl, first, last)</a></td>
+	<td class="name" nowrap><a href="#B.remove">B.remove (tbl, first, last)</a></td>
 	<td class="summary">remove(tbl,first,last) <br/>
  extra: multiple remove <br/>
  missing: parameter checks</td>
 	</tr>
 	<tr>
-	<td class="name" nowrap><a href="#B.sort">B.sort&nbsp;(tbl, cmp, first, last)</a></td>
+	<td class="name" nowrap><a href="#B.sort">B.sort (tbl, cmp, first, last)</a></td>
 	<td class="summary">sort(tbl,cmp,first,last) <br/>
  extra: stable sort <br/>
  extra: returns permutation <br/>
@@ -99,38 +98,44 @@
 <br/>
 
 
-    <h2><a name="Functions"></a>Functions</h2>
+    <h2 class="section-header "><a name="Functions"></a>Functions</h2>
+
     <dl class="function">
     <dt>
     <a name = "B.concat"></a>
-    <strong>B.concat&nbsp;(tbl, sep, first, last)</strong>
+    <strong>B.concat (tbl, sep, first, last)</strong>
     </dt>
     <dd>
     concat(tbl,sep,first,last) <br/>
  standard: second argument is used as a separator if a number or a string <br/>
  extra: second argument is used as a filter if a function <br/>
- nonstandard: <code>sep</code>=<code>nil</code> defaults to <a href="http://www.lua.org/manual/5.1/manual.html#pdf-tostring">tostring</a> , not to the empty string <br/>
+ nonstandard: <code>sep</code>=<code>nil</code> defaults to <a href="http://www.lua.org/manual/5.1/manual.html#pdf-tostring">tostring</a>, not to the empty string <br/>
  extra: concatenation respects metamethods <br/>
  missing: elegant workaround for stack overflow
+
 
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">tbl</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">sep</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">first</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">last</span>
 
 
-</li>
+
+        </li>
     </ul>
 
 
@@ -140,27 +145,31 @@
 </dd>
     <dt>
     <a name = "B.insert"></a>
-    <strong>B.insert&nbsp;(tbl, index, ...)</strong>
+    <strong>B.insert (tbl, index, ...)</strong>
     </dt>
     <dd>
     insert(tbl,index,...) <br/>
  extra: multiple insert <br/>
  missing: parameter checks
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">tbl</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">index</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">...</span>
 
 
-</li>
+
+        </li>
     </ul>
 
 
@@ -170,27 +179,31 @@
 </dd>
     <dt>
     <a name = "B.remove"></a>
-    <strong>B.remove&nbsp;(tbl, first, last)</strong>
+    <strong>B.remove (tbl, first, last)</strong>
     </dt>
     <dd>
     remove(tbl,first,last) <br/>
  extra: multiple remove <br/>
  missing: parameter checks
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">tbl</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">first</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">last</span>
 
 
-</li>
+
+        </li>
     </ul>
 
 
@@ -200,7 +213,7 @@
 </dd>
     <dt>
     <a name = "B.sort"></a>
-    <strong>B.sort&nbsp;(tbl, cmp, first, last)</strong>
+    <strong>B.sort (tbl, cmp, first, last)</strong>
     </dt>
     <dd>
     sort(tbl,cmp,first,last) <br/>
@@ -208,24 +221,29 @@
  extra: returns permutation <br/>
  extra: reverse the sort when <code>last&lt;first</code>
 
+
     <h3>Parameters:</h3>
     <ul>
         <li><span class="parameter">tbl</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">cmp</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">first</span>
 
 
-</li>
+
+        </li>
         <li><span class="parameter">last</span>
 
 
-</li>
+
+        </li>
     </ul>
 
 
@@ -239,7 +257,8 @@
 </div> <!-- id="content" -->
 </div> <!-- id="main" -->
 <div id="about">
-<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.3</a></i>
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.3</a></i>
+<i style="float:right;">Last updated 2015-09-08 07:43:19 </i>
 </div> <!-- id="about" -->
 </div> <!-- id="container" -->
 </body>
